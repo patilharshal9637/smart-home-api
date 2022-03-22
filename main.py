@@ -10,7 +10,10 @@ import uvicorn
 
 
 app = FastAPI()
-data ={
+data = {
+    "services": {
+        
+    },
     "auth":{
         "patil.sanket18@outlook.com":{
             "email":"patil.sanket18@outlook.com",
@@ -123,8 +126,9 @@ class Register(BaseModel):
     fname:str
     lname:str
     profile_img:str
-    service:dict
     passwd:str
+
+
 
 #defining some helping methods
 
@@ -165,7 +169,7 @@ def return_user_dict(user:dict,uid:str):
         "fname":user["fname"],
         "lname":user["lname"],
         "profile_img":user["profile_img"],
-        "service":user["service"]
+        
         
         
     }
@@ -186,13 +190,25 @@ def get_random_string(length:int):
     return result_str
 
 #7:change applicances state
-def change_applicances_state(user_data:dict,room_name:str,device_name:str,state:bool):
-    service = user_data["service"]
-    try:
-        service[room_name]["device"][device_name] = state
-        return "success"
-    except:
-        return "failure"
+def change_applicances_state(serviceData: dict, room_name: str, device_name: str, state: bool):
+    serviceData[room_name]["devices"][device_name] = state
+    return "success"
+
+#8:creating room prerequisites
+def create_room_prequisites(serviceData, roomName):
+    serviceData[roomName] = {
+        "room_name": roomName,
+        "devices": {
+
+        }
+
+    }
+    return "success"
+
+# 9:creating devices
+def create_single_device(serviceData, roomName, deviceName):
+    serviceData[roomName]["devices"][deviceName] = False
+    return "success"
 
 
 
@@ -224,16 +240,38 @@ def register(new_user:Register):
         
         uid = get_random_string(14)
         data["auth"][user["email"]] =return_auth_dict(user=user,uid=uid)
-        data["user"][uid] = return_user_dict(user=user,uid=uid)
+        data["user"][uid] = return_user_dict(user=user, uid=uid)
+        data['services'][uid] = {
+
+        }
         
     return "Account created successfully"
 
 
 #updating appliances state
-@app.put("/service/{uid}&{room_name}&{device_name}&{state}")
+@app.patch("/services/{uid}/{room_name}/{device_name}&{state}")
 def update_device_state(uid:str,room_name:str,device_name:str,state:bool):
-    user_data = return_user_data(uid=uid)
-    status = change_applicances_state(user_data=user_data,room_name=room_name,device_name=device_name,state=state)
+    serviceData = data["services"][uid]
+    
+    status = change_applicances_state(serviceData,room_name=room_name,device_name=device_name,state=state)
+    return status
+
+
+
+
+#creating rooms
+@app.put("/services/{uid}&{room_name}")
+def create_rooms(uid: str, room_name:str):
+    serviceData = data["services"][uid]
+    status = create_room_prequisites(serviceData, room_name)
+    return status
+
+
+#creating devices
+@app.put("/services/{uid}/{room_name}/{device_name}")
+def create_device(uid: str, room_name:str, device_name:str):
+    serviceData = data["services"][uid]
+    status = create_single_device(serviceData, room_name, device_name)
     return status
 
 
