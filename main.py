@@ -161,7 +161,7 @@ def update_device_state(uid:str,room_name:str,device_name:str,state:bool):
 
 
 #creating rooms
-@app.put("/services/{uid}&{room_name}")
+@app.put("/createroom/{uid}&{room_name}")
 def create_rooms(uid: str, room_name:str):
     serviceData = data["services"][uid]
     status = create_room_prequisites(serviceData, room_name)
@@ -183,5 +183,5 @@ def create_device(uid: str, room_name:str, device_name:str):
 
 
     
-# if __name__ == "__main__":
-#     uvicorn.run(app=app,port=8000,host="10.0.2.2")
+if __name__ == "__main__":
+    uvicorn.run(app=app,port=8000,host="10.0.2.2")
