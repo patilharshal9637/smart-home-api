@@ -161,22 +161,22 @@ def update_device_state(uid:str,room_name:str,device_name:str,state:bool):
 
 
 #creating rooms
-@app.put("/createroom/{uid}&{room_name}")
+@app.put("/create-room/{uid}&{room_name}")
 def create_rooms(uid: str, room_name:str):
     serviceData = data["services"][uid]
     status = create_room_prequisites(serviceData, room_name)
     return status
 
 #get services data from uid
-@app.get("/getservices/{uid}/{room_name}") 
+@app.get("/get-services-data/{uid}/{room_name}") 
 def get_service_data(uid:str,room_name:str):
     serviceData = data["services"][uid]
     user_device_data = serviceData[room_name]["devices"]
     return user_device_data
 
 #creating devices
-@app.put("/services/{uid}/{room_name}/{device_name}")
-def create_device(uid: str, room_name:str, device_name:str):
+@app.put("/add-devices/{uid}/{room_name}/{device_name}")
+def add_device(uid: str, room_name:str, device_name:str):
     serviceData = data["services"][uid]
     status = create_single_device(serviceData, room_name, device_name)
     return status
