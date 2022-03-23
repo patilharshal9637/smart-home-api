@@ -6,112 +6,13 @@ import string
 from fastapi import FastAPI, Response,status
 from pydantic import BaseModel
 import uvicorn
+from helper import data
 
 
 
 app = FastAPI()
-data = {
-    "services": {
-        
-    },
-    "auth":{
-        "patil.sanket18@outlook.com":{
-            "email":"patil.sanket18@outlook.com",
-            "passwd":"Sanket@123",
-            "uid":"7219442303"
-        },
-        "psanket18052001@gmail.com":{
-            "email":"psanket18052001@gmail.com",
-            "passwd":"Sanket@123",
-            "uid":"7709982500"
-        }
-    },
-    "user":{
-        "7219442303":{
-            "email":"patil.sanket18@outlook.com",
-            "fname":"Sanket",
-            "lname":"Patil",
-            "profile_img":"http://this.is.pic",
-            "service":{
-                "living_room":{
-                    "room_name":"Living Room",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"12032022 11:30AM",
-                    "connection_gateway":"192.168.43.1"
-                },
-                "bedroom":{
-                    "room_name":"Bed Room",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"13032022 16:30PM",
-                    "connection_gateway":"192.168.43.2"
-                },
-                "kitchen":{
-                    "room_name":"Kitchen",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"14032022 7:30AM",
-                    "connection_gateway":"192.168.43.3"
-                }
-            }
+data = data.data
 
-        },
-        "7709982500":{
-                "email":"psanket18052001@gmail.com",
-            "fname":"Sanket",
-            "lname":"Patil",
-            "profile_img":"http://this.is.pic",
-            "service":{
-                "living_room":{
-                    "room_name":"Living Room",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"12032022 11:30AM",
-                    "connection_gateway":"192.168.43.1"
-                },
-                "bedroom":{
-                    "room_name":"Bed Room",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"13032022 16:30PM",
-                    "connection_gateway":"192.168.43.2"
-                },
-                "kitchen":{
-                    "room_name":"Kitchen",
-                    "device":{
-                        "tv":True,
-                        "light":False,
-                        "washing_machine":True,
-                        "fan":True
-                    },
-                    "time_stamp":"14032022 7:30AM",
-                    "connection_gateway":"192.168.43.3"
-                }
-            }
-        }
-    }
-}
 
 
 
@@ -266,6 +167,12 @@ def create_rooms(uid: str, room_name:str):
     status = create_room_prequisites(serviceData, room_name)
     return status
 
+#get services data from uid
+@app.get("/getservices/{uid}/{room_name}") 
+def get_service_data(uid:str,room_name:str):
+    serviceData = data["services"][uid]
+    user_device_data = serviceData[room_name]["devices"]
+    return user_device_data
 
 #creating devices
 @app.put("/services/{uid}/{room_name}/{device_name}")
@@ -276,5 +183,5 @@ def create_device(uid: str, room_name:str, device_name:str):
 
 
     
-if __name__ == "__main__":
-    uvicorn.run(app=app,port=8000,host="10.0.2.2")
+# if __name__ == "__main__":
+#     uvicorn.run(app=app,port=8000,host="10.0.2.2")
