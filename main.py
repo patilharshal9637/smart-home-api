@@ -150,7 +150,7 @@ def register(new_user:Register):
 
 
 #updating appliances state
-@app.patch("/services/{uid}/{room_name}/{device_name}&{state}")
+@app.patch("/update-appliance-data/{uid}/{room_name}/{device_name}&{state}")
 def update_device_state(uid:str,room_name:str,device_name:str,state:bool):
     serviceData = data["services"][uid]
     
