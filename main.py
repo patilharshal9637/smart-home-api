@@ -129,9 +129,15 @@ def userdata(uid:str):
     return user_data
 
 
-@app.post("/register")
-def register(new_user:Register):
-    user = new_user.dict()
+@app.post("/register/{email}&{fname}&{lname}&{profile_img}&{passwd}")
+def register(email:str, fname:str, lname:str, profile_img:str, passwd:str):
+    user = {
+  "email": email,
+  "fname": fname,
+  "lname": lname,
+  "profile_img": profile_img,
+  "passwd": passwd
+}
     print(user)
     check = isExist(email=user["email"])
     print(check)
@@ -183,5 +189,5 @@ def add_device(uid: str, room_name:str, device_name:str):
 
 
     
-if __name__ == "__main__":
-    uvicorn.run(app=app,port=8000,host="10.0.2.2")
+# if __name__ == "__main__":
+#     uvicorn.run(app=app,port=8000,host="10.0.2.2")
